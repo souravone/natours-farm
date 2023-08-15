@@ -1,8 +1,8 @@
 const { query } = require('express');
 const Tour = require('./../models/tourModel');
-const APIFeatures = require('./../utils/apiFeatures');
 const catchAsync = require('./../utils/catchAsync');
-const AppError = require('./../utils/appError');
+// const AppError = require('./../utils/appError');
+const factory = require('./handlerFactory');
 
 exports.aliasTopTours = (req, res, next) => {
   req.query.limit = '5';
@@ -42,6 +42,7 @@ exports.checkbody = (req, res, next) => {
 
 */
 
+/*
 exports.getAllTours = catchAsync(async (req, res, next) => {
   //filtering
   /*
@@ -78,7 +79,7 @@ exports.getAllTours = catchAsync(async (req, res, next) => {
       const numTours = await Tour.countDocuments();
       if (skip >= numTours) throw new Error('This page does not exist');
     }
-*/
+//////////////////////////////////////////////
   //execute query
   const features = new APIFeatures(Tour.find(), req.query)
     .filter()
@@ -96,9 +97,12 @@ exports.getAllTours = catchAsync(async (req, res, next) => {
     },
   });
 });
+*/
+exports.getAllTours = factory.getAll(Tour);
 
+/*
 exports.getSpecificTour = catchAsync(async (req, res, next) => {
-  const tour = await Tour.findById(req.params.id);
+  const tour = await Tour.findById(req.params.id).populate('reviews');
 
   if (!tour) {
     return next(new AppError('No tour found with that ID', 404));
@@ -111,7 +115,10 @@ exports.getSpecificTour = catchAsync(async (req, res, next) => {
     },
   });
 });
+*/
+exports.getSpecificTour = factory.getOne(Tour, { path: 'reviews' });
 
+/*
 exports.createTour = catchAsync(async (req, res, next) => {
   const newTour = await Tour.create(req.body);
 
@@ -122,7 +129,11 @@ exports.createTour = catchAsync(async (req, res, next) => {
     },
   });
 });
+*/
 
+exports.createTour = factory.createOne(Tour);
+
+/*
 exports.updateTour = catchAsync(async (req, res, next) => {
   const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
@@ -141,6 +152,11 @@ exports.updateTour = catchAsync(async (req, res, next) => {
   });
 });
 
+*/
+
+exports.updateTour = factory.updateOne(Tour);
+
+/*
 exports.deleteTour = catchAsync(async (req, res, next) => {
   const tour = await Tour.findByIdAndDelete(req.params.id);
   if (!tour) {
@@ -152,6 +168,10 @@ exports.deleteTour = catchAsync(async (req, res, next) => {
     data: null,
   });
 });
+
+*/
+
+exports.deleteTour = factory.deleteOne(Tour);
 
 exports.getTourStats = catchAsync(async (req, res, next) => {
   const stats = await Tour.aggregate([
