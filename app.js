@@ -40,6 +40,8 @@ const connectSrcUrls = [
   'https://unpkg.com',
   'https://tile.openstreetmap.org',
   'https://cdnjs.cloudflare.com/',
+  'https://bundle.js:*',
+  'ws://127.0.0.1:*/',
 ];
 const fontSrcUrls = ['fonts.googleapis.com', 'fonts.gstatic.com'];
 
@@ -75,6 +77,7 @@ const limiter = rateLimit({
 app.use('/api', limiter);
 
 app.use(express.json({ limit: '10kb' }));
+app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 app.use(cookieParser());
 
 // data sanitization against noSQL query injection
@@ -109,7 +112,7 @@ app.use((req, res, next) => {
 // Test middleware
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
-  console.log(req.cookies);
+  // console.log(req.cookies);
   // console.log(req.headers);
   next();
 });
