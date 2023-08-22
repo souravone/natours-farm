@@ -170,12 +170,11 @@ if (loginForm) loginForm.addEventListener("submit", (e)=>{
 if (logoutBtn) logoutBtn.addEventListener("click", (0, _loginJs.logout));
 if (userDataForm) userDataForm.addEventListener("submit", (e)=>{
     e.preventDefault();
-    const name = document.getElementById("name").value;
-    const email = document.getElementById("email").value;
-    (0, _updateSettingsJs.updateSettings)({
-        name,
-        email
-    }, "data");
+    const form = new FormData();
+    form.append("name", document.getElementById("name").value);
+    form.append("email", document.getElementById("email").value);
+    form.append("photo", document.getElementById("photo").files[0]);
+    (0, _updateSettingsJs.updateSettings)(form, "data");
 });
 if (userPasswordForm) userPasswordForm.addEventListener("submit", async (e)=>{
     e.preventDefault();
@@ -5599,7 +5598,12 @@ const updateSettings = async (data, type)=>{
             url,
             data
         });
-        if (res.data.status === "success") (0, _alertJs.showAlert)("success", `${type.toUpperCase()} updated successfully`);
+        if (res.data.status === "success") {
+            (0, _alertJs.showAlert)("success", `${type.toUpperCase()} updated successfully`);
+            window.setTimeout(()=>{
+                location.reload();
+            }, 1000);
+        }
     } catch (err) {
         (0, _alertJs.showAlert)("error", err.response.data.message);
         console.log(err);
