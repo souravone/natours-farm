@@ -13,10 +13,8 @@ export const bookTour = async (tourId) => {
     );
 
     // get checkout session
-    const session = await axios(
-      `http://127.0.0.1:3000/api/v1/bookings/checkout-session/${tourId}`,
-    );
-    console.log(session);
+    const session = await axios(`/api/v1/bookings/checkout-session/${tourId}`);
+    // console.log(session);
     // create checkout form + process
     window.location.replace(session.data.session.url);
 
@@ -24,7 +22,7 @@ export const bookTour = async (tourId) => {
     //   sessionId: session.data.session.id,
     // });
   } catch (err) {
-    console.log(err);
+    // console.log(err);
     showAlert('error', err.response.data.message);
   }
 };
